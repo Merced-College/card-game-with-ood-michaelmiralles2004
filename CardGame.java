@@ -1,6 +1,8 @@
 package cardGame;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -12,6 +14,7 @@ public class CardGame {
 
 
 	public static void main(String[] args) {
+
 
 		Scanner input = null;
 		try {
@@ -46,6 +49,14 @@ public class CardGame {
 
 		System.out.println("pairs is " + checkFor2Kind());
 
+
+		// Print out player's score by calling the methond scoreCalc
+		System.out.println("Player score: " + scoreCalc(playerCards));
+
+		// Creating a new scanner and calling the method sortPlaterHand
+		Scanner scanner = new Scanner(System.in);
+		sortPlayerHand(playerCards, scanner);
+
 	}//end main
 
 	public static void shuffle() {
@@ -79,5 +90,52 @@ public class CardGame {
 
 		}//end outer for
 		return false;
+	}
+
+	// New feature calculate score
+	public static int scoreCalc(ArrayList<Card> hand) {
+		int total = 0;
+		for(Card c : hand) {
+			total += c.getValue();
+		}
+		return total;
+	}
+
+	// New feature sort the player's hand
+	public static void sortPlayerHand(ArrayList<Card> playerCards, Scanner scanner) {
+		int sortingChoice;
+		System.out.println("How would you like to sort your hand?");
+		System.out.println("You can sort it by 1. Card value or 2. Card name. Please choose either 1 or 2.");
+		sortingChoice = scanner.nextInt();
+
+		// Compare two cards by value using c.getValue()
+		if (sortingChoice == 1) {
+			// Sorts a list based on the custom rule which we define using Comparator
+			Collections.sort(playerCards, new Comparator<Card>() {
+				// Define how two Card objects should be compared
+				public int compare(Card c1, Card c2) {
+					return Integer.compare(c1.getValue(), c2.getValue());
+				}
+			});
+			System.out.println("You hand has been sorted by value: ");
+		}
+
+		// Uses comparator to compare card name
+		else if (sortingChoice == 2) {
+			Collections.sort(playerCards, new Comparator<Card>() {
+				public int compare(Card c1, Card c2) {
+					return c1.getName().compareTo(c2.getName());
+				}
+			});
+			System.out.println("Sorted by name:");
+		}
+		else {
+			System.out.println("Invalid input.");
+		}
+
+		// Print final hand
+		for (Card c : playerCards) {
+			System.out.println(c);
+		}
 	}
 }//end class
